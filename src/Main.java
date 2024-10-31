@@ -8,20 +8,68 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
         int choice=1;
+        int counter=0;
 
 
         while (choice!=0){
             board(game, boardChoices);
             choice = input.nextInt();
+
             if (!legalChoice(game,choice)){
                 System.out.println("Please choose one of the remaining numbers on the second board");
                 continue;}
 
             updateBoard(game, boardChoices, choice, choiceXO);
+
+            if (checkWin(game)){
+                board(game, boardChoices);
+                System.out.println("Player "+ choiceXO + " wins");
+                break;}
+
             choiceXO=chooseXO(choiceXO);
 
+            counter++;
+            if (counter==9){
+                board(game, boardChoices);
+                System.out.println("Draw");
+                break;
+            }
         }
 
+    }
+
+
+
+    public static boolean checkWin(String[][] gameBoard){
+        boolean win=false;
+
+        if (gameBoard[0][0].equals(gameBoard[0][1]) && gameBoard[0][0].equals(gameBoard[0][2])){
+            if (gameBoard[0][0].equals("O") || gameBoard[0][0].equals("X"))
+                win = true;
+        }else if (gameBoard[1][0].equals(gameBoard[1][1]) && gameBoard[1][0].equals(gameBoard[1][2])){
+            if (gameBoard[1][0].equals("O") || gameBoard[1][0].equals("X"))
+                win = true;
+        }else if (gameBoard[2][0].equals(gameBoard[2][1]) && gameBoard[2][0].equals(gameBoard[2][2])){
+            if (gameBoard[2][0].equals("O") || gameBoard[2][0].equals("X"))
+                win = true;
+        }else if (gameBoard[0][0].equals(gameBoard[1][1]) && gameBoard[0][0].equals(gameBoard[2][2])){
+            if (gameBoard[0][0].equals("O") || gameBoard[0][0].equals("X"))
+                win = true;
+        }else if (gameBoard[0][2].equals(gameBoard[1][1]) && gameBoard[0][2].equals(gameBoard[2][0])){
+            if (gameBoard[0][2].equals("O") || gameBoard[0][2].equals("X"))
+                win = true;
+        }else if (gameBoard[0][0].equals(gameBoard[1][0]) && gameBoard[0][0].equals(gameBoard[2][0])){
+            if (gameBoard[0][0].equals("O") || gameBoard[0][0].equals("X"))
+                win = true;
+        }else if (gameBoard[0][1].equals(gameBoard[1][1]) && gameBoard[0][1].equals(gameBoard[2][1])){
+            if (gameBoard[0][1].equals("O") || gameBoard[0][1].equals("X"))
+                win = true;
+        }else if (gameBoard[0][2].equals(gameBoard[1][2]) && gameBoard[0][2].equals(gameBoard[2][2])){
+            if (gameBoard[0][0].equals("O") || gameBoard[0][0].equals("X"))
+                win = true;
+        }
+
+            return win;
     }
 
     public static String chooseXO(String choiceXO){
