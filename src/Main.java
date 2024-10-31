@@ -7,24 +7,51 @@ public class Main {
         board(game,boardChoices);
 
         Scanner input = new Scanner(System.in);
+        int choice=1;
 
-        int choice = input.nextInt();
 
-        updateBoard(game,boardChoices,choice,"X");
-        board(game,boardChoices);
+        while (choice!=0){
+            choice = input.nextInt();
+
+            updateBoard(game, boardChoices, choice, "X");
+            board(game, boardChoices);
+        }
+
+
 
     }
 
+    public static boolean legalChoice(String[][]game,int choice){
+        boolean legalMove = false;
+        if (choice >=1 && choice<=3){
+            if (game[0][choice-1].equals(" "))
+                legalMove=true;
+        } else if (choice >=4 && choice<=6) {
+            System.out.println(choice);
+            if (game[1][choice-4].equals(" "))
+                legalMove=true;
+        } else if (choice >=7 && choice<=9) {
+            if (game[2][choice-7].equals(" "))
+                legalMove=true;
+        }
+
+        return legalMove;
+    }
+
     public static void updateBoard(String[][]game,String[][] boardChoices,int choice,String moveType){
+        if (!legalChoice(game,choice)){
+            System.out.println("Please choose one of the remaining numbers on the second board");
+            return;}
+
         if (choice >=1 && choice<=3){
             game[0][choice-1]=moveType;
             boardChoices[0][choice-1]=" ";
         } else if (choice >=4 && choice<=6) {
-            game[0][choice-4]=moveType;
-            boardChoices[0][choice-4]=" ";
+            game[1][choice-4]=moveType;
+            boardChoices[1][choice-4]=" ";
         } else if (choice >=7 && choice<=9) {
-            game[0][choice-7]=moveType;
-            boardChoices[0][choice-7]=" ";
+            game[2][choice-7]=moveType;
+            boardChoices[2][choice-7]=" ";
         }
     }
 
