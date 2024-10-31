@@ -4,21 +4,31 @@ public class Main {
     public static void main(String[] args) {
         String[][] game= {{" "," "," "},{" "," "," "},{" "," "," "}};
         String[][] boardChoices = {{"1","2","3"},{"4","5","6"},{"7","8","9"}};
-        board(game,boardChoices);
+        String choiceXO="O";
 
         Scanner input = new Scanner(System.in);
         int choice=1;
 
 
         while (choice!=0){
-            choice = input.nextInt();
-
-            updateBoard(game, boardChoices, choice, "X");
             board(game, boardChoices);
+            choice = input.nextInt();
+            if (!legalChoice(game,choice)){
+                System.out.println("Please choose one of the remaining numbers on the second board");
+                continue;}
+
+            updateBoard(game, boardChoices, choice, choiceXO);
+            choiceXO=chooseXO(choiceXO);
+
         }
 
+    }
 
-
+    public static String chooseXO(String choiceXO){
+        if (choiceXO.equals("O"))
+            return "X";
+        else
+            return "O";
     }
 
     public static boolean legalChoice(String[][]game,int choice){
@@ -39,10 +49,6 @@ public class Main {
     }
 
     public static void updateBoard(String[][]game,String[][] boardChoices,int choice,String moveType){
-        if (!legalChoice(game,choice)){
-            System.out.println("Please choose one of the remaining numbers on the second board");
-            return;}
-
         if (choice >=1 && choice<=3){
             game[0][choice-1]=moveType;
             boardChoices[0][choice-1]=" ";
@@ -53,6 +59,7 @@ public class Main {
             game[2][choice-7]=moveType;
             boardChoices[2][choice-7]=" ";
         }
+
     }
 
     public static void board(String[][] game,String[][] boardChoices){
