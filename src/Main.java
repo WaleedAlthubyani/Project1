@@ -3,14 +3,43 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+
+        System.out.println("Please choose your type of game");
+        System.out.println("1.One round vs computer");
+        System.out.println("2.Best of three vs computer");
+
+        Scanner input = new Scanner(System.in);
+        String[] player = {"player","computer"};
+        int loop = input.nextInt();
+        if (loop == 2)
+            loop++;
+        int[] winners = {0,0,0};
+        int winner;
+        for (int i = 0; i < loop; i++) {
+            winner=gameStart();
+            System.out.println();
+            winners[winner-1]++;
+            if (winners[winner-1]==2 && (winner-1)!=2){
+                System.out.println("The " + player[winner-1] +" won the game");
+                break;
+            } else if (winners[2]==2 || (winners[0]==1 && winners[1]==1 && winners[2]==1)) {
+                System.out.println("This game ended in a draw");
+                break;
+            }
+        }
+
+    }
+
+    public static int gameStart(){
+
         String[][] game= {{" "," "," "},{" "," "," "},{" "," "," "}};
         String[][] boardChoices = {{"1","2","3"},{"4","5","6"},{"7","8","9"}};
         String choiceXO="O";
 
+
         Scanner input = new Scanner(System.in);
         int choice;
         int counter=0;
-
 
         while (true){
             board(game, boardChoices);
@@ -24,19 +53,9 @@ public class Main {
 
             if (checkWin(game)){
                 board(game, boardChoices);
-                System.out.println("Player "+ choiceXO + " wins");
-                break;}
-
-            choiceXO=chooseXO(choiceXO);
-
-            counter++;
-
-            updateBoard(game, boardChoices, computer(game), choiceXO);
-
-            if (checkWin(game)){
-                board(game, boardChoices);
-                System.out.println("Player "+ choiceXO + " wins");
-                break;}
+                System.out.println("The player won this round");
+                return 1;
+            }
 
             choiceXO=chooseXO(choiceXO);
 
@@ -47,15 +66,27 @@ public class Main {
                 System.out.println("Draw");
                 break;
             }
-        }
 
+            updateBoard(game, boardChoices, computer(game), choiceXO);
+
+            if (checkWin(game)){
+                board(game, boardChoices);
+                System.out.println("The computer won this round");
+                return 2;
+            }
+
+            choiceXO=chooseXO(choiceXO);
+
+            counter++;
+        }
+        return 3;
     }
 
     public static int computer(String[][]game){
         Random rand = new Random();
-        int choice;
+        int choice=0;
 
-        while (true){
+        while (choice<10){
             choice =rand.nextInt(1,10);
             if (legalChoice(game,choice))
                 break;
