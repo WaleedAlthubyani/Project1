@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -7,11 +8,11 @@ public class Main {
         String choiceXO="O";
 
         Scanner input = new Scanner(System.in);
-        int choice=1;
+        int choice;
         int counter=0;
 
 
-        while (choice!=0){
+        while (true){
             board(game, boardChoices);
             choice = input.nextInt();
 
@@ -29,6 +30,18 @@ public class Main {
             choiceXO=chooseXO(choiceXO);
 
             counter++;
+
+            updateBoard(game, boardChoices, computer(game), choiceXO);
+
+            if (checkWin(game)){
+                board(game, boardChoices);
+                System.out.println("Player "+ choiceXO + " wins");
+                break;}
+
+            choiceXO=chooseXO(choiceXO);
+
+            counter++;
+
             if (counter==9){
                 board(game, boardChoices);
                 System.out.println("Draw");
@@ -38,6 +51,17 @@ public class Main {
 
     }
 
+    public static int computer(String[][]game){
+        Random rand = new Random();
+        int choice;
+
+        while (true){
+            choice =rand.nextInt(1,10);
+            if (legalChoice(game,choice))
+                break;
+        }
+        return choice;
+    }
 
 
     public static boolean checkWin(String[][] gameBoard){
@@ -65,7 +89,7 @@ public class Main {
             if (gameBoard[0][1].equals("O") || gameBoard[0][1].equals("X"))
                 win = true;
         }else if (gameBoard[0][2].equals(gameBoard[1][2]) && gameBoard[0][2].equals(gameBoard[2][2])){
-            if (gameBoard[0][0].equals("O") || gameBoard[0][0].equals("X"))
+            if (gameBoard[0][2].equals("O") || gameBoard[0][2].equals("X"))
                 win = true;
         }
 
@@ -85,7 +109,6 @@ public class Main {
             if (game[0][choice-1].equals(" "))
                 legalMove=true;
         } else if (choice >=4 && choice<=6) {
-            System.out.println(choice);
             if (game[1][choice-4].equals(" "))
                 legalMove=true;
         } else if (choice >=7 && choice<=9) {
