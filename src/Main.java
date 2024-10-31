@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -9,14 +10,29 @@ public class Main {
         System.out.println("2.Best of three vs computer");
 
         Scanner input = new Scanner(System.in);
-        String[] player = {"player","computer"};
-        int loop = input.nextInt();
+        int loop=0;
+        String[] player= {"player","computer"};
+
+        while (loop<1 || loop>2){
+            try {
+                loop = input.nextInt();
+            } catch (InputMismatchException e) {
+                input.nextLine();//to avoid infinite loop
+            }
+            if (loop<1 || loop>2)
+                System.out.println("please choose 1 or 2");
+        }
+
         if (loop == 2)
             loop++;
         int[] winners = {0,0,0};
         int winner;
         for (int i = 0; i < loop; i++) {
-            winner=gameStart();
+            if (i==0 || i==2)
+                winner=gameStart1();
+            else
+                winner=gameStart2();
+
             System.out.println();
             winners[winner-1]++;
             if (winners[winner-1]==2 && (winner-1)!=2){
@@ -30,7 +46,65 @@ public class Main {
 
     }
 
-    public static int gameStart(){
+    public static int gameStart2(){
+
+        String[][] game= {{" "," "," "},{" "," "," "},{" "," "," "}};
+        String[][] boardChoices = {{"1","2","3"},{"4","5","6"},{"7","8","9"}};
+        String choiceXO="O";
+
+        Scanner input = new Scanner(System.in);
+        int choice;
+        int counter=0;
+
+        while (true){
+
+            updateBoard(game, boardChoices, computer(game), choiceXO);
+
+            counter++;
+
+            if (counter==9){
+                board(game, boardChoices);
+                System.out.println("Draw");
+                break;
+            }
+
+            if (checkWin(game)){
+                board(game, boardChoices);
+                System.out.println("The computer won this round");
+                return 2;
+            }
+
+            choiceXO=chooseXO(choiceXO);
+
+
+
+            board(game, boardChoices);
+            try {
+                choice = input.nextInt();
+            }catch (InputMismatchException e){
+                input.nextLine();//to avoid infinite loop
+                choice = 0;
+            }
+
+            if (!legalChoice(game,choice)){
+                System.out.println("Please choose one of the remaining numbers on the second board");
+                continue;}
+
+            updateBoard(game, boardChoices, choice, choiceXO);
+
+            if (checkWin(game)){
+                board(game, boardChoices);
+                System.out.println("The player won this round");
+                return 1;
+            }
+
+            choiceXO=chooseXO(choiceXO);
+            counter++;
+        }
+        return 3;
+    }
+
+    public static int gameStart1(){
 
         String[][] game= {{" "," "," "},{" "," "," "},{" "," "," "}};
         String[][] boardChoices = {{"1","2","3"},{"4","5","6"},{"7","8","9"}};
@@ -43,7 +117,12 @@ public class Main {
 
         while (true){
             board(game, boardChoices);
-            choice = input.nextInt();
+            try {
+                choice = input.nextInt();
+            }catch (InputMismatchException e){
+                input.nextLine();//to avoid infinite loop
+                choice = 0;
+            }
 
             if (!legalChoice(game,choice)){
                 System.out.println("Please choose one of the remaining numbers on the second board");
@@ -94,7 +173,6 @@ public class Main {
         return choice;
     }
 
-
     public static boolean checkWin(String[][] gameBoard){
         boolean win=false;
 
@@ -124,7 +202,7 @@ public class Main {
                 win = true;
         }
 
-            return win;
+        return win;
     }
 
     public static String chooseXO(String choiceXO){
